@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>本地龙虾部署（本地模型+高级模型调用） | Snowkey</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="最近龙虾很火，很多人都想尝试，但是又担心主力电脑的个人信息泄露，出现巨大的安全漏洞。 除了使用各大厂商提供的整套的云服务方案之外（贵啊！！！！） 我给你一套最简单、用完就关、零浪费、绝对安全的低成本 「高配机做服务端 + 闲置机内网调用」一键方案。 简单任务用 Ollama本地模型，高级任务用各大厂****API。 闲置机 &#x3D; 只跑「小龙虾」UI &#x2F; 前端 高配机 &#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="本地龙虾部署（本地模型+高级模型调用）">
+<meta property="og:url" content="https://snowkey-zju.github.io/2026/03/14/%E6%9C%AC%E5%9C%B0%E9%BE%99%E8%99%BE%E9%83%A8%E7%BD%B2%EF%BC%88%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B-%E9%AB%98%E7%BA%A7%E6%A8%A1%E5%9E%8B%E8%B0%83%E7%94%A8%EF%BC%89/index.html">
+<meta property="og:site_name" content="Snowkey">
+<meta property="og:description" content="最近龙虾很火，很多人都想尝试，但是又担心主力电脑的个人信息泄露，出现巨大的安全漏洞。 除了使用各大厂商提供的整套的云服务方案之外（贵啊！！！！） 我给你一套最简单、用完就关、零浪费、绝对安全的低成本 「高配机做服务端 + 闲置机内网调用」一键方案。 简单任务用 Ollama本地模型，高级任务用各大厂****API。 闲置机 &#x3D; 只跑「小龙虾」UI &#x2F; 前端 高配机 &#x3D;">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-03-14T15:06:31.000Z">
+<meta property="article:modified_time" content="2026-03-14T15:10:25.034Z">
+<meta property="article:author" content="Snowkey">
+<meta property="article:tag" content="技术交流">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Snowkey" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Snowkey</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://Snowkey-zju.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-本地龙虾部署（本地模型-高级模型调用）" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/03/14/%E6%9C%AC%E5%9C%B0%E9%BE%99%E8%99%BE%E9%83%A8%E7%BD%B2%EF%BC%88%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B-%E9%AB%98%E7%BA%A7%E6%A8%A1%E5%9E%8B%E8%B0%83%E7%94%A8%EF%BC%89/" class="article-date">
+  <time class="dt-published" datetime="2026-03-14T15:06:31.000Z" itemprop="datePublished">2026-03-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      本地龙虾部署（本地模型+高级模型调用）
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>最近龙虾很火，很多人都想尝试，但是又担心主力电脑的个人信息泄露，出现巨大的安全漏洞。</p>
+<p>除了使用各大厂商提供的整套的云服务方案之外（贵啊！！！！）</p>
+<p>我给你一套<strong>最简单、用完就关、零浪费、绝对安全</strong>的<strong>低成本</strong></p>
+<p>「高配机做服务端 + 闲置机内网调用」一键方案。</p>
+<p><strong>简单任务用 Ollama本地模型，高级任务用各大厂****API</strong>。</p>
+<p>闲置机 &#x3D; 只跑「小龙虾」UI &#x2F; 前端</p>
+<p>高配机 &#x3D; 只跑模型（Ollama 后端）</p>
+<hr>
+<h1 id="一、本地需求"><a href="#一、本地需求" class="headerlink" title="一、本地需求"></a>一、本地需求</h1><p><strong>一台高级电脑做服务器（平时自用的主力电脑），另一台闲置电脑内网调用（物理隔离）。</strong></p>
+<h2 id="高配电脑"><a href="#高配电脑" class="headerlink" title="高配电脑"></a>高配电脑</h2><p><strong>入门（千问7B 模型）</strong>：RTX 4060 8G + 16G 内存 + 512G SSD → <strong>约 6,000–8,000 元（本案例以7B模型为例）</strong></p>
+<p><strong>主流（千问7B&#x2F;14B）</strong>：RTX 4060 Ti 16G + 32G 内存 + 1TB SSD → <strong>约 10,000–12,000 元</strong></p>
+<p><strong>高端（千问32B）</strong>：RTX 4090 24G + 64G 内存 + 2TB SSD → <strong>约 18,000–22,000 元</strong></p>
+<h2 id="闲置电脑"><a href="#闲置电脑" class="headerlink" title="闲置电脑"></a>闲置电脑</h2><p>没有重要个人信息的win或者mac都行。没有的话淘个二手的低配笔记本也行，几乎不需要几个钱。</p>
+<h1 id="二、整体流程（超短）"><a href="#二、整体流程（超短）" class="headerlink" title="二、整体流程（超短）"></a>二、整体流程（超短）</h1><ol>
+<li><p>高配机：装 Ollama → 跑模型 → 开内网访问</p>
+</li>
+<li><p>闲置机：<strong>不用装模型，不用显卡</strong>，直接访问</p>
+</li>
+<li><p>用完：<strong>关掉 Ollama 就行</strong>，不耗电</p>
+</li>
+</ol>
+<hr>
+<h1 id="三、高配电脑（模型服务器）一键设置"><a href="#三、高配电脑（模型服务器）一键设置" class="headerlink" title="三、高配电脑（模型服务器）一键设置"></a>三、高配电脑（模型服务器）一键设置</h1><h2 id="1-安装-Ollama"><a href="#1-安装-Ollama" class="headerlink" title="1. 安装 Ollama"></a>1. 安装 Ollama</h2><p><a target="_blank" rel="noopener" href="https://ollama.com/">https://ollama.com</a></p>
+<p>下载 → 下一步 → 安装完成。</p>
+<h2 id="2-拉一个轻量但好用的模型（低频用足够）"><a href="#2-拉一个轻量但好用的模型（低频用足够）" class="headerlink" title="2. 拉一个轻量但好用的模型（低频用足够）"></a>2. 拉一个轻量但好用的模型（低频用足够）</h2><p>打开 <strong>命令提示符（CMD）</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama pull qwen:7b</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-开启内网访问（只执行这一次）"><a href="#3-开启内网访问（只执行这一次）" class="headerlink" title="3. 开启内网访问（只执行这一次）"></a>3. 开启内网访问（<strong>只执行这一次</strong>）</h2><h3 id="Windows-永久开内网（最简单，以后不用再输）"><a href="#Windows-永久开内网（最简单，以后不用再输）" class="headerlink" title="Windows 永久开内网（最简单，以后不用再输）"></a>Windows 永久开内网（最简单，以后不用再输）</h3><p>以<strong>管理员</strong>打开 PowerShell，运行：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="type">Environment</span>]::SetEnvironmentVariable(<span class="string">&quot;OLLAMA_HOST&quot;</span>, <span class="string">&quot;0.0.0.0&quot;</span>, <span class="string">&quot;User&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>重启 Ollama</strong> 就生效了。</p>
+<h2 id="4-查看你的高配机内网IP"><a href="#4-查看你的高配机内网IP" class="headerlink" title="4. 查看你的高配机内网IP"></a>4. 查看你的高配机内网IP</h2><p>CMD 输入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ipconfig</span><br></pre></td></tr></table></figure>
+
+<p>找到类似：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IPv4 地址: 192.168.1.100</span><br></pre></td></tr></table></figure>
+
+<p>记下来，后面要用。</p>
+<hr>
+<h1 id="四、闲置电脑（客户端）怎么调用？"><a href="#四、闲置电脑（客户端）怎么调用？" class="headerlink" title="四、闲置电脑（客户端）怎么调用？"></a>四、闲置电脑（客户端）怎么调用？</h1><h2 id="方式1：网页界面直接用（最简单）"><a href="#方式1：网页界面直接用（最简单）" class="headerlink" title="方式1：网页界面直接用（最简单）"></a>方式1：网页界面直接用（最简单）</h2><p>高配机打开一个 WebUI（我给你最小的）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama run qwen:7b</span><br></pre></td></tr></table></figure>
+
+<p>闲置机打开浏览器，输入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.0.113:11434</span><br></pre></td></tr></table></figure>
+
+<p>就能聊天、总结、写代码。</p>
+<h2 id="方式2：像调用-API-一样用（适合你玩项目）"><a href="#方式2：像调用-API-一样用（适合你玩项目）" class="headerlink" title="方式2：像调用 API 一样用（适合你玩项目）"></a>方式2：像调用 API 一样用（适合你玩项目）</h2><p>闲置机里代码这样写（Python 示例）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> openai <span class="keyword">import</span> OpenAIclient = OpenAI(    base_url=<span class="string">&quot;http://192.168.1.100:11434/v1&quot;</span>,    api_key=<span class="string">&quot;dummy&quot;</span>  <span class="comment"># 随便填)resp = client.chat.completions.create(    model=&quot;qwen:7b&quot;,    messages=[&#123;&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;你好&quot;&#125;])print(resp.choices[0].message.content)</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="五、闲置电脑安装本地龙虾"><a href="#五、闲置电脑安装本地龙虾" class="headerlink" title="五、闲置电脑安装本地龙虾"></a>五、闲置电脑安装本地龙虾</h1><p>闲置机<strong>完全不用装模型、不用显卡</strong>。</p>
+<ol>
+<li><h3 id="安装小龙虾（OpenClaw）"><a href="#安装小龙虾（OpenClaw）" class="headerlink" title="安装小龙虾（OpenClaw）"></a>安装小龙虾（OpenClaw）</h3></li>
+</ol>
+<p>可以参考其他文档安装：<a target="_blank" rel="noopener" href="https://yunyinghui.feishu.cn/wiki/Ru7PwG82qiDGo1kGMFZcxqpGnnf#DIiSdPebyoKUvExlaFyceP4jn06">OpenClaw 学习手册（全网首发&amp;持续更新 ing…</a></p>
+<p>iwr -useb <a target="_blank" rel="noopener" href="https://open-claw.org.cn/install-cn.ps1">https://open-claw.org.cn/install-cn.ps1</a> | iex</p>
+<p><a target="_blank" rel="noopener" href="http://localhost:7681/">http://localhost:7681</a></p>
+<p>我这里使用秋芝2046的一键安装包 <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/F_Gljbe2y_Xuot2oWQdFng">https://mp.weixin.qq.com/s/F_Gljbe2y_Xuot2oWQdFng</a></p>
+<p>正常安装，打开后：</p>
+<ol start="2">
+<li><h3 id="关键设置：让小龙虾连你的高配机-Ollama"><a href="#关键设置：让小龙虾连你的高配机-Ollama" class="headerlink" title="关键设置：让小龙虾连你的高配机 Ollama"></a>关键设置：<strong>让小龙虾连你的高配机 Ollama</strong></h3></li>
+</ol>
+<p>在小龙虾设置里，把 <strong>大模型接口</strong> 改成：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.1.100:11434/v1</span><br></pre></td></tr></table></figure>
+
+<p>API Key 随便填，比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dummy</span><br></pre></td></tr></table></figure>
+
+<p>模型选择：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qwen:7b</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><h3 id="保存-→-直接用"><a href="#保存-→-直接用" class="headerlink" title="保存 → 直接用"></a>保存 → 直接用</h3></li>
+</ol>
+<p>闲置机现在就是一个<strong>纯前端界面</strong>，所有算力都走高配机。</p>
+<h1 id="六、多模型配置-任务路由-手动切换"><a href="#六、多模型配置-任务路由-手动切换" class="headerlink" title="六、多模型配置 + 任务路由 &#x2F; 手动切换"></a>六、多模型配置 + 任务路由 &#x2F; 手动切换</h1><p>「按任务难度分流调用不同模型」是非常实用的进阶用法 ——<strong>高级任务（复杂推理 &#x2F; 创作）走 GPT&#x2F;Gemini API，基础任务（简单问答 &#x2F; 整理）走本地模型</strong>，既省 API 费用又保证效率。</p>
+<h3 id="核心实现思路"><a href="#核心实现思路" class="headerlink" title="核心实现思路"></a>核心实现思路</h3><p>小龙虾本身支持<strong>多模型配置 + 任务路由 &#x2F; 手动切换</strong>，我们只需要做两步：</p>
+<ol>
+<li><p>在小龙虾中配置两套模型（GPT&#x2F;Gemini + 本地 Ollama）的 API 信息；</p>
+</li>
+<li><p>要么手动选择模型执行任务，要么通过「提示词 &#x2F; 任务类型」自动分流（进阶）。</p>
+</li>
+</ol>
+<h2 id="一、在小龙虾中配置多模型-API-Key"><a href="#一、在小龙虾中配置多模型-API-Key" class="headerlink" title="一、在小龙虾中配置多模型 API Key"></a>一、在小龙虾中配置多模型 API Key</h2><h3 id="1-基础配置（手动切换模型）"><a href="#1-基础配置（手动切换模型）" class="headerlink" title="1.基础配置（手动切换模型）"></a>1.基础配置（手动切换模型）</h3><p>这是最简单的方式，适合新手，步骤如下：</p>
+<h4 id="（1）配置-GPT-Gemini-API（高级任务）"><a href="#（1）配置-GPT-Gemini-API（高级任务）" class="headerlink" title="（1）配置 GPT&#x2F;Gemini API（高级任务）"></a>（1）配置 GPT&#x2F;Gemini API（高级任务）</h4><ul>
+<li><p>打开小龙虾（OpenClaw）→ 进入「设置」→「模型配置」；</p>
+</li>
+<li><p>新增模型：</p>
+<ul>
+<li><p>模型类型：选择「OpenAI（GPT）」、「Google Gemini」或者其他大厂的模型；</p>
+</li>
+<li><p>API 地址：</p>
+<ul>
+<li><p>GPT：默认 <code>https://api.openai.com/v1</code>（国内需配置代理）；</p>
+</li>
+<li><p>Gemini：<code>https://generativelanguage.googleapis.com/v1</code>；</p>
+</li>
+</ul>
+</li>
+<li><p>API Key：填入你申请的 GPT、Gemini 或者其他大厂的模型官方 API Key；</p>
+</li>
+<li><p>模型名称：例如「GPT-4o」「Gemini 1.5 Pro」，保存。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="（2）配置本地-Ollama-模型（低级任务）"><a href="#（2）配置本地-Ollama-模型（低级任务）" class="headerlink" title="（2）配置本地 Ollama 模型（低级任务）"></a>（2）配置本地 Ollama 模型（低级任务）</h4><ul>
+<li><p>继续在「模型配置」中新增模型：</p>
+<ul>
+<li><p>模型类型：选择「OpenAI 兼容」（Ollama 支持 OpenAI 格式）；</p>
+</li>
+<li><p>API 地址：填入高配机的内网地址 <code>http://192.168.1.100:11434/v1</code>；</p>
+</li>
+<li><p>API Key：随便填（如 <code>dummy</code>，Ollama 不校验）；</p>
+</li>
+<li><p>模型名称：填入你本地的模型名（如「qwen:7b」），保存。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="（3）使用时切换"><a href="#（3）使用时切换" class="headerlink" title="（3）使用时切换"></a>（3）使用时切换</h4><p>执行任务前，在小龙虾的「任务设置」或「输入框旁」选择对应的模型：</p>
+<ul>
+<li><p>写复杂方案、深度推理 → 选「GPT-4o&#x2F;Gemini」；</p>
+</li>
+<li><p>简单问答、文本整理、本地文件处理 → 选「qwen:7b（本地）」。</p>
+</li>
+</ul>
+<ol start="2">
+<li><h3 id="进阶配置（自动分流，不用手动切换）"><a href="#进阶配置（自动分流，不用手动切换）" class="headerlink" title="进阶配置（自动分流，不用手动切换）"></a>进阶配置（自动分流，不用手动切换）</h3></li>
+</ol>
+<p>如果想让小龙虾「自动判断任务难度」分流，需要用到小龙虾的「提示词路由」或「插件规则」（以主流版本为例）：</p>
+<h4 id="（1）新建规则模板"><a href="#（1）新建规则模板" class="headerlink" title="（1）新建规则模板"></a>（1）新建规则模板</h4><ul>
+<li><p>进入小龙虾「插件 &#x2F; 自动化」→「新建路由规则」；</p>
+</li>
+<li><p>设置触发条件：</p>
+<ul>
+<li><p>条件 1：提示词包含「复杂」「推理」「创作」「分析」等关键词 → 路由到「GPT&#x2F;Gemini」；</p>
+</li>
+<li><p>条件 2：提示词包含「简单」「整理」「总结」「本地文件」等关键词 → 路由到「本地 Ollama」；</p>
+</li>
+<li><p>默认规则：无关键词时，优先走本地模型（省 API 费）。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="（2）示例规则代码（可直接复制）"><a href="#（2）示例规则代码（可直接复制）" class="headerlink" title="（2）示例规则代码（可直接复制）"></a>（2）示例规则代码（可直接复制）</h4><p>如果小龙虾支持自定义脚本，可添加以下逻辑（Python 示例）：</p>
+<p>python</p>
+<p>运行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">def route_model(prompt):# 高级任务关键词    high_level_keywords = [&quot;复杂&quot;, &quot;推理&quot;, &quot;创作&quot;, &quot;分析&quot;, &quot;写方案&quot;, &quot;编程优化&quot;]# 低级任务关键词    low_level_keywords = [&quot;总结&quot;, &quot;整理&quot;, &quot;简单问答&quot;, &quot;本地文件&quot;, &quot;格式转换&quot;]if any(keyword in prompt for keyword in high_level_keywords):return &quot;GPT-4o&quot;  # 走高级模型elif any(keyword in prompt for keyword in low_level_keywords):return &quot;qwen:7b&quot;  # 走本地模型else:return &quot;qwen:7b&quot;  # 默认走本地</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-【推荐】使用秋芝2046插件"><a href="#3-【推荐】使用秋芝2046插件" class="headerlink" title="3.【推荐】使用秋芝2046插件"></a>3.【推荐】使用秋芝2046插件</h3><p>秋芝2046推出的Qclaw，可以使用<strong>省钱插件</strong>，一键完成自主选择模型。</p>
+<hr>
+<h2 id="二、关键注意事项（避坑）"><a href="#二、关键注意事项（避坑）" class="headerlink" title="二、关键注意事项（避坑）"></a>二、关键注意事项（避坑）</h2><ol>
+<li><p><strong>网络适配</strong>：</p>
+<ol>
+<li><p>GPT&#x2F;Gemini API 需要外网 &#x2F; 代理，本地 Ollama 只需要内网，小龙虾会自动识别不同地址的网络；</p>
+</li>
+<li><p>建议给小龙虾配置「双网络」：本地内网（连高配机）+ 代理（连外网 API）。</p>
+</li>
+</ol>
+</li>
+<li><p><strong>费用控制</strong>：</p>
+<ol>
+<li><p>在小龙虾中开启「API 用量统计」，设置 GPT&#x2F;Gemini 的「月额度上限」（如 50 元），超额度自动切本地模型；</p>
+</li>
+<li><p>本地模型无费用，可放心用。</p>
+</li>
+</ol>
+</li>
+<li><p><strong>模型兼容性</strong>：</p>
+<ol>
+<li><p>确保小龙虾选择的「模型名称」与实际一致（如 GPT-4o 不能写成 gpt4，本地 qwen:7b 不能漏后缀）；</p>
+</li>
+<li><p>Ollama 可通过 <code>ollama list</code> 命令查看本地模型全称。</p>
+</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
+<li><p><strong>基础用法</strong>：在小龙虾中分别配置 GPT&#x2F;Gemini 和本地 Ollama 的 API 信息，手动选择模型执行不同难度任务；</p>
+</li>
+<li><p><strong>进阶用法</strong>：通过「关键词路由规则」让小龙虾自动判断任务难度，高级活走云端 API，低级活走本地模型；</p>
+</li>
+<li><p><strong>核心优势</strong>：既利用云端大模型的能力，又通过本地模型节省 API 费用，完全适配你的「低频使用、物理隔离」需求。</p>
+</li>
+</ol>
+<h1 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h1><p><strong>闲置机装小龙虾 → 指向高配机的 Ollama 地址</strong></p>
+<p><strong>高配机只跑模型 → 用完就关机</strong></p>
+<p><strong>这就是你要的：物理隔离 + 最低成本 + 最舒服的本地部署。</strong></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://snowkey-zju.github.io/2026/03/14/%E6%9C%AC%E5%9C%B0%E9%BE%99%E8%99%BE%E9%83%A8%E7%BD%B2%EF%BC%88%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B-%E9%AB%98%E7%BA%A7%E6%A8%A1%E5%9E%8B%E8%B0%83%E7%94%A8%EF%BC%89/" data-id="cuideocl6qKUCu5BbXybp7luO" data-title="本地龙虾部署（本地模型+高级模型调用）" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF%E4%BA%A4%E6%B5%81/" rel="tag">技术交流</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2026/02/28/%E5%85%B3%E4%BA%8E%E6%88%91/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">关于我</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B8%AA%E4%BA%BA%E5%BF%83%E5%BE%97/" rel="tag">个人心得</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8A%80%E6%9C%AF%E4%BA%A4%E6%B5%81/" rel="tag">技术交流</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%94%9F%E6%B4%BB/" rel="tag">生活</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E4%B8%AA%E4%BA%BA%E5%BF%83%E5%BE%97/" style="font-size: 10px;">个人心得</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E4%BA%A4%E6%B5%81/" style="font-size: 10px;">技术交流</a> <a href="/tags/%E7%94%9F%E6%B4%BB/" style="font-size: 10px;">生活</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/03/">March 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/02/">February 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/03/14/%E6%9C%AC%E5%9C%B0%E9%BE%99%E8%99%BE%E9%83%A8%E7%BD%B2%EF%BC%88%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B-%E9%AB%98%E7%BA%A7%E6%A8%A1%E5%9E%8B%E8%B0%83%E7%94%A8%EF%BC%89/">本地龙虾部署（本地模型+高级模型调用）</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/28/%E5%85%B3%E4%BA%8E%E6%88%91/">关于我</a>
+          </li>
+        
+          <li>
+            <a href="/2026/02/28/2026%E5%B9%B4%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/">2026年我的第一篇技术笔记</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 Snowkey<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
